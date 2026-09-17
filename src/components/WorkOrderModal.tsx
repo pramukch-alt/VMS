@@ -163,7 +163,7 @@ export const WorkOrderModal: React.FC<WorkOrderModalProps> = ({ isOpen, onClose,
               <div className="text-right">
                 <span className="inline-flex items-center gap-1 font-semibold text-brand-primary">
                   <Gauge className="w-3.5 h-3.5" />
-                  ไมล์ล่าสุด: {selectedVehicle.current_mileage.toLocaleString()} km
+                  ไมล์ล่าสุด: {(selectedVehicle.current_mileage || 0).toLocaleString()} km
                 </span>
               </div>
             </div>

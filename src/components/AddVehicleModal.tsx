@@ -201,8 +201,19 @@ export const AddVehicleModal: React.FC<AddVehicleModalProps> = ({ isOpen, onClos
                 onChange={(e) => setBaseLocation(e.target.value)}
                 className="w-full border border-brand-border rounded-lg p-2 text-sm bg-slate-50 font-medium"
               >
-                <option value="สนก.บางกรวย">สนก.บางกรวย</option>
-                <option value="เขื่อนท่าทุ่งนา">เขื่อนท่าทุ่งนา</option>
+                {[
+                  'สนก.บางกรวย',
+                  'สนก. บางกรวย',
+                  'รฟ.แม่เมาะ',
+                  'เขื่อนท่าทุ่งนา (ศกท-หก.)',
+                  'เขื่อนท่าทุ่งนา',
+                  'รฟ.วังน้อย',
+                  'รฟ.สิรินธร',
+                  'รฟ.จะนะ',
+                  'โครงการเพรชบุรี'
+                ].map((loc) => (
+                  <option key={loc} value={loc}>{loc}</option>
+                ))}
               </select>
             </div>
           </div>

@@ -205,7 +205,7 @@ export const AddMaintenanceModal: React.FC<AddMaintenanceModalProps> = ({
                 <p className="text-slate-500">{selectedVehicle.brand} {selectedVehicle.model} ({selectedVehicle.base_location})</p>
               </div>
               <span className="text-xs bg-white px-2.5 py-1 rounded border border-slate-300 font-semibold">
-                ไมล์ล่าสุด: {selectedVehicle.current_mileage.toLocaleString()} km
+                ไมล์ล่าสุด: {(selectedVehicle.current_mileage || 0).toLocaleString()} km
               </span>
             </div>
           )}

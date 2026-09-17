@@ -145,7 +145,7 @@ export const VehicleDrawer: React.FC<VehicleDrawerProps> = ({ vehicleId, onClose
                 <p className="text-slate-600 font-bold">เลขไมล์สะสมปัจจุบัน</p>
                 <p className="font-extrabold text-brand-primary text-sm mt-0.5 flex items-center gap-1">
                   <Gauge className="w-4 h-4 text-brand-primary" />
-                  {detail.current_mileage.toLocaleString()} km
+                  {(detail.current_mileage || 0).toLocaleString()} km
                 </p>
               </div>
               <div>

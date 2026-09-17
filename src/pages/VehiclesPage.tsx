@@ -43,6 +43,10 @@ export const VehiclesPage: React.FC<VehiclesPageProps> = ({
     return Array.from(new Set(vehicles.map((v) => v.department).filter(Boolean)));
   }, [vehicles]);
 
+  const locations = React.useMemo(() => {
+    return Array.from(new Set(vehicles.map((v) => v.base_location).filter(Boolean))).sort();
+  }, [vehicles]);
+
   const filteredVehicles = vehicles.filter((v) => {
     if (selectedCategory !== 'all' && v.category !== selectedCategory) return false;
     if (selectedStatus !== 'all' && v.status !== selectedStatus) return false;
@@ -174,9 +178,12 @@ export const VehiclesPage: React.FC<VehiclesPageProps> = ({
             onChange={(e) => setSelectedLocation(e.target.value)}
             className="bg-slate-50 border border-brand-border rounded-lg px-3 py-2 text-xs font-medium text-slate-700"
           >
-            <option value="all">-- สถานที่ประจำรถทั้งหมด --</option>
-            <option value="สนก.บางกรวย">สนก.บางกรวย</option>
-            <option value="เขื่อนท่าทุ่งนา">เขื่อนท่าทุ่งนา</option>
+            <option value="all">-- สถานที่ประจำรถทั้งหมด ({vehicles.length} คัน) --</option>
+            {locations.map((loc) => (
+              <option key={loc} value={loc}>
+                {loc} ({vehicles.filter(v => v.base_location === loc).length} คัน)
+              </option>
+            ))}
           </select>
         </div>
 
@@ -287,7 +294,7 @@ export const VehiclesPage: React.FC<VehiclesPageProps> = ({
                     <td className="py-3.5 px-4 text-xs font-semibold text-slate-700">
                       <span className="inline-flex items-center gap-1">
                         <Gauge className="w-3.5 h-3.5 text-slate-400" />
-                        {v.current_mileage.toLocaleString()} km
+                        {(v.current_mileage || 0).toLocaleString()} km
                       </span>
                     </td>
                     <td className="py-3.5 px-4">

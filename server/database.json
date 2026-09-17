@@ -12,12 +12,12 @@
       "vehicle_type": "รถยนต์นั่ง 2 ตอน 2 แถว",
       "fuel_type": "ดีเซล",
       "specifications": "รถนั่ง 2 แถวโดยสารที่มีที่นั่งไม่เกิน 12 ที่นั่ง",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.แม่เมาะ",
       "status": "รอซ่อม",
       "registration_date": "2013-09-24",
       "tax_due_date": "2026-09-24",
       "tax_amount": 1600,
-      "current_mileage": 15000,
+      "current_mileage": 154757,
       "created_at": "2026-09-16T09:30:10.676856"
     },
     {
@@ -32,12 +32,12 @@
       "vehicle_type": "รถยนต์นั่ง 2 ตอน 2 แถว",
       "fuel_type": "ดีเซล",
       "specifications": "รถยนต์บรรทุก",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "สนก. บางกรวย",
       "status": "จอดรองาน",
       "registration_date": "2008-03-11",
       "tax_due_date": "2027-11-03",
       "tax_amount": null,
-      "current_mileage": 16905,
+      "current_mileage": 0,
       "created_at": "2026-09-16T09:30:10.676906"
     },
     {
@@ -52,12 +52,12 @@
       "vehicle_type": "รถนั่ง 2 แถวโดยสารที่มีที่นั่งไม่เกิน 12 ที่นั่ง",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุก",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "สนก. บางกรวย",
       "status": "จอดรองาน",
       "registration_date": "2012-10-19",
       "tax_due_date": "2026-10-19",
       "tax_amount": 1300,
-      "current_mileage": 17900,
+      "current_mileage": 0,
       "created_at": "2026-09-16T09:30:10.676921"
     },
     {
@@ -72,12 +72,12 @@
       "vehicle_type": "รถจักรยานยนต์",
       "fuel_type": "ดีเซล",
       "specifications": "รถจักรยานยนต์",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "เขื่อนท่าทุ่งนา (ศกท-หก.)",
       "status": "ใช้งาน",
       "registration_date": "2021-05-20",
       "tax_due_date": "2026-05-20",
       "tax_amount": null,
-      "current_mileage": 19350,
+      "current_mileage": 2409,
       "created_at": "2026-09-16T09:30:10.676933"
     },
     {
@@ -92,12 +92,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุกน้ำ",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.วังน้อย",
       "status": "จอดรองาน",
       "registration_date": "1991-06-06",
       "tax_due_date": "2027-03-31",
       "tax_amount": null,
-      "current_mileage": 20800,
+      "current_mileage": 129861,
       "created_at": "2026-09-16T09:30:10.676944"
     },
     {
@@ -112,12 +112,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุกเทท้าย 10 ล้อ",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.แม่เมาะ",
       "status": "จอดรองาน",
       "registration_date": "2001-06-13",
       "tax_due_date": "2027-03-31",
       "tax_amount": null,
-      "current_mileage": 22250,
+      "current_mileage": 144260,
       "created_at": "2026-09-16T09:30:10.676955"
     },
     {
@@ -132,12 +132,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "หัวลากจูง",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.สิรินธร",
       "status": "จอดรองาน",
       "registration_date": "2002-09-12",
       "tax_due_date": "2027-06-30",
       "tax_amount": null,
-      "current_mileage": 23700,
+      "current_mileage": 410191,
       "created_at": "2026-09-16T09:30:10.676968"
     },
     {
@@ -152,12 +152,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุกสิบล้อ",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.แม่เมาะ",
       "status": "จอดรองาน",
       "registration_date": "2003-09-08",
       "tax_due_date": "2027-06-30",
       "tax_amount": null,
-      "current_mileage": 25150,
+      "current_mileage": 114682,
       "created_at": "2026-09-16T09:30:10.676978"
     },
     {
@@ -172,12 +172,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุกเทท้าย 10 ล้อ",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.สิรินธร",
       "status": "จอดรองาน",
       "registration_date": "1997-08-22",
       "tax_due_date": "2027-06-30",
       "tax_amount": null,
-      "current_mileage": 26600,
+      "current_mileage": 114484,
       "created_at": "2026-09-16T09:30:10.676988"
     },
     {
@@ -192,12 +192,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุกเทท้าย 10 ล้อ",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.แม่เมาะ",
       "status": "จอดรองาน",
       "registration_date": "2001-06-13",
       "tax_due_date": "2027-06-30",
       "tax_amount": null,
-      "current_mileage": 28050,
+      "current_mileage": 134443,
       "created_at": "2026-09-16T09:30:10.676998"
     },
     {
@@ -212,12 +212,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุกเทท้าย 10 ล้อ",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.วังน้อย",
       "status": "จอดรองาน",
       "registration_date": "2002-09-09",
       "tax_due_date": "2027-06-30",
       "tax_amount": null,
-      "current_mileage": 29500,
+      "current_mileage": 123390,
       "created_at": "2026-09-16T09:30:10.677007"
     },
     {
@@ -232,12 +232,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุกน้ำ",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.แม่เมาะ",
       "status": "จอดรองาน",
       "registration_date": "2004-09-21",
       "tax_due_date": "2027-06-30",
       "tax_amount": null,
-      "current_mileage": 30950,
+      "current_mileage": 97186,
       "created_at": "2026-09-16T09:30:10.677019"
     },
     {
@@ -252,12 +252,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุกน้ำ",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.สิรินธร",
       "status": "ใช้งาน",
       "registration_date": "1997-08-01",
       "tax_due_date": "2027-06-30",
       "tax_amount": null,
-      "current_mileage": 32400,
+      "current_mileage": 109773,
       "created_at": "2026-09-16T09:30:10.677030"
     },
     {
@@ -272,12 +272,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุกเทท้าย 6 ล้อ",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "เขื่อนท่าทุ่งนา (ศกท-หก.)",
       "status": "จอดรองาน",
       "registration_date": "2004-09-21",
       "tax_due_date": "2027-06-30",
       "tax_amount": null,
-      "current_mileage": 33850,
+      "current_mileage": 111991,
       "created_at": "2026-09-16T09:30:10.677040"
     },
     {
@@ -292,12 +292,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุกเทท้าย 6 ล้อ",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "เขื่อนท่าทุ่งนา (ศกท-หก.)",
       "status": "จอดรองาน",
       "registration_date": "2004-09-21",
       "tax_due_date": "2027-06-30",
       "tax_amount": null,
-      "current_mileage": 35300,
+      "current_mileage": 99188,
       "created_at": "2026-09-16T09:30:10.677049"
     },
     {
@@ -312,12 +312,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุกเทท้าย 10 ล้อ",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.วังน้อย",
       "status": "จอดรองาน",
       "registration_date": "1997-09-17",
       "tax_due_date": "2027-06-30",
       "tax_amount": null,
-      "current_mileage": 36750,
+      "current_mileage": 133120,
       "created_at": "2026-09-16T09:30:10.677059"
     },
     {
@@ -332,12 +332,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุกเทท้าย 10 ล้อ",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.สิรินธร",
       "status": "จอดรองาน",
       "registration_date": "1997-08-22",
       "tax_due_date": "2027-06-30",
       "tax_amount": null,
-      "current_mileage": 38220,
+      "current_mileage": 99726,
       "created_at": "2026-09-16T09:30:10.677069"
     },
     {
@@ -352,12 +352,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุกเทท้าย 10 ล้อ",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.แม่เมาะ",
       "status": "จอดรองาน",
       "registration_date": "1997-08-22",
       "tax_due_date": "2027-06-30",
       "tax_amount": null,
-      "current_mileage": 39650,
+      "current_mileage": 117087,
       "created_at": "2026-09-16T09:30:10.677079"
     },
     {
@@ -372,12 +372,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุกเทท้าย 10 ล้อ",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.สิรินธร",
       "status": "จอดรองาน",
       "registration_date": "1997-08-22",
       "tax_due_date": "2027-06-30",
       "tax_amount": null,
-      "current_mileage": 41100,
+      "current_mileage": 119853,
       "created_at": "2026-09-16T09:30:10.677089"
     },
     {
@@ -392,12 +392,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุกเทท้าย 10 ล้อ",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.แม่เมาะ",
       "status": "จอดรองาน",
       "registration_date": "2002-09-09",
       "tax_due_date": "2027-06-30",
       "tax_amount": null,
-      "current_mileage": 42550,
+      "current_mileage": 94829,
       "created_at": "2026-09-16T09:30:10.677098"
     },
     {
@@ -412,12 +412,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุกเทท้าย 10 ล้อ",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.แม่เมาะ",
       "status": "ใช้งาน",
       "registration_date": "2002-09-09",
       "tax_due_date": "2027-06-30",
       "tax_amount": null,
-      "current_mileage": 44000,
+      "current_mileage": 110479,
       "created_at": "2026-09-16T09:30:10.677108"
     },
     {
@@ -432,12 +432,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุกเทท้าย 10 ล้อ",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "เขื่อนท่าทุ่งนา (ศกท-หก.)",
       "status": "ใช้งาน",
       "registration_date": "2001-06-13",
       "tax_due_date": "2027-03-31",
       "tax_amount": null,
-      "current_mileage": 45450,
+      "current_mileage": 162867,
       "created_at": "2026-09-16T09:30:10.677122"
     },
     {
@@ -452,12 +452,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุกติดเครน",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "เขื่อนท่าทุ่งนา (ศกท-หก.)",
       "status": "ใช้งาน",
       "registration_date": "2002-08-20",
       "tax_due_date": "2026-12-31",
       "tax_amount": 3600,
-      "current_mileage": 46900,
+      "current_mileage": 74594,
       "created_at": "2026-09-16T09:30:10.677133"
     },
     {
@@ -472,12 +472,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "หางพ่วง",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.สิรินธร",
       "status": "ใช้งาน",
       "registration_date": "2007-02-15",
       "tax_due_date": "2026-12-31",
       "tax_amount": 3600,
-      "current_mileage": 48350,
+      "current_mileage": 0,
       "created_at": "2026-09-16T09:30:10.677147"
     },
     {
@@ -492,12 +492,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "หางพ่วง",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.สิรินธร",
       "status": "ใช้งาน",
       "registration_date": "2003-01-16",
       "tax_due_date": "2026-12-31",
       "tax_amount": 3600,
-      "current_mileage": 49800,
+      "current_mileage": 0,
       "created_at": "2026-09-16T09:30:10.677165"
     },
     {
@@ -512,12 +512,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุกน้ำ",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "เขื่อนท่าทุ่งนา (ศกท-หก.)",
       "status": "ใช้งาน",
       "registration_date": "1996-02-09",
       "tax_due_date": "2026-12-31",
       "tax_amount": 3400,
-      "current_mileage": 51250,
+      "current_mileage": 112688,
       "created_at": "2026-09-16T09:30:10.677176"
     },
     {
@@ -532,12 +532,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุกน้ำ",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.แม่เมาะ",
       "status": "ใช้งาน",
       "registration_date": "1995-02-03",
       "tax_due_date": "2026-12-31",
       "tax_amount": 3600,
-      "current_mileage": 52700,
+      "current_mileage": 161516,
       "created_at": "2026-09-16T09:30:10.677188"
     },
     {
@@ -552,12 +552,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุกน้ำมัน",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.แม่เมาะ",
       "status": "ใช้งาน",
       "registration_date": "1986-01-29",
       "tax_due_date": "2026-12-31",
       "tax_amount": 3200,
-      "current_mileage": 54150,
+      "current_mileage": 36155,
       "created_at": "2026-09-16T09:30:10.677202"
     },
     {
@@ -572,12 +572,12 @@
       "vehicle_type": "รถตู้บรรทุก",
       "fuel_type": "ดีเซล",
       "specifications": "รถบำรุงรักษา",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.วังน้อย",
       "status": "ใช้งาน",
       "registration_date": "1998-03-09",
       "tax_due_date": "2026-12-31",
       "tax_amount": 3600,
-      "current_mileage": 55600,
+      "current_mileage": 56695,
       "created_at": "2026-09-16T09:30:10.677213"
     },
     {
@@ -592,12 +592,12 @@
       "vehicle_type": "รถตู้บรรทุก",
       "fuel_type": "ดีเซล",
       "specifications": "รถบำรุงรักษา",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.แม่เมาะ",
       "status": "ใช้งาน",
       "registration_date": "1998-01-09",
       "tax_due_date": "2026-12-31",
       "tax_amount": 3600,
-      "current_mileage": 57050,
+      "current_mileage": 43421,
       "created_at": "2026-09-16T09:30:10.677225"
     },
     {
@@ -612,12 +612,12 @@
       "vehicle_type": "กระบะบรรทุก",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุก",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.วังน้อย",
       "status": "ใช้งาน",
       "registration_date": "1996-02-28",
       "tax_due_date": "2026-12-31",
       "tax_amount": 3400,
-      "current_mileage": 58500,
+      "current_mileage": 20386,
       "created_at": "2026-09-16T09:30:10.677236"
     },
     {
@@ -632,12 +632,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "หางพ่วง",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "เขื่อนท่าทุ่งนา (ศกท-หก.)",
       "status": "ใช้งาน",
       "registration_date": "1984-10-24",
       "tax_due_date": "2026-09-30",
       "tax_amount": 3400,
-      "current_mileage": 59950,
+      "current_mileage": 0,
       "created_at": "2026-09-16T09:30:10.677249"
     },
     {
@@ -652,12 +652,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "หัวลากจูง",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.สิรินธร",
       "status": "ใช้งาน",
       "registration_date": "2001-10-16",
       "tax_due_date": "2026-09-30",
       "tax_amount": 3600,
-      "current_mileage": 61400,
+      "current_mileage": 373601,
       "created_at": "2026-09-16T09:30:10.677265"
     },
     {
@@ -672,12 +672,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุกติดเครน",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.จะนะ",
       "status": "ใช้งาน",
       "registration_date": "2003-09-30",
       "tax_due_date": "2026-09-30",
       "tax_amount": 3600,
-      "current_mileage": 62850,
+      "current_mileage": 38422,
       "created_at": "2026-09-16T09:30:10.677276"
     },
     {
@@ -692,12 +692,12 @@
       "vehicle_type": "รถเครื่องจักรกล",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุกติดเครน",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.แม่เมาะ",
       "status": "ใช้งาน",
       "registration_date": "1992-11-19",
       "tax_due_date": "2026-09-30",
       "tax_amount": 3400,
-      "current_mileage": 64300,
+      "current_mileage": 197151,
       "created_at": "2026-09-16T09:30:10.677286"
     },
     {
@@ -712,12 +712,12 @@
       "vehicle_type": "กระบะบรรทุก",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุก 6 ล้อ",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "เขื่อนท่าทุ่งนา (ศกท-หก.)",
       "status": "ใช้งาน",
       "registration_date": "1998-10-26",
       "tax_due_date": "2026-09-30",
       "tax_amount": 3200,
-      "current_mileage": 65750,
+      "current_mileage": 173432,
       "created_at": "2026-09-16T09:30:10.677297"
     },
     {
@@ -732,12 +732,12 @@
       "vehicle_type": "กระบะบรรทุก",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุก",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "เขื่อนท่าทุ่งนา (ศกท-หก.)",
       "status": "ใช้งาน",
       "registration_date": "1997-10-17",
       "tax_due_date": "2026-09-30",
       "tax_amount": 3200,
-      "current_mileage": 67200,
+      "current_mileage": 169870,
       "created_at": "2026-09-16T09:30:10.677309"
     },
     {
@@ -752,12 +752,12 @@
       "vehicle_type": "กระบะบรรทุก",
       "fuel_type": "ดีเซล",
       "specifications": "รถบรรทุก",
-      "base_location": "สนก.บางกรวย",
+      "base_location": "รฟ.สิรินธร",
       "status": "ใช้งาน",
       "registration_date": "1998-10-17",
       "tax_due_date": "2026-09-30",
       "tax_amount": 2400,
-      "current_mileage": 68650,
+      "current_mileage": 164786,
       "created_at": "2026-09-16T09:30:10.677318"
     },
     {
@@ -772,12 +772,12 @@
       "vehicle_type": "รถบรรทุกเฉพาะกิจ",
       "fuel_type": "ดีเซล",
       "specifications": "รถขยะ",
-      "base_location": "เขื่อนท่าทุ่งนา",
+      "base_location": "เขื่อนท่าทุ่งนา (ศกท-หก.)",
       "status": "ใช้งาน",
       "registration_date": "1992-12-25",
       "tax_due_date": "2026-09-30",
       "tax_amount": 2800,
-      "current_mileage": 70100,
+      "current_mileage": 27583,
       "created_at": "2026-09-16T09:30:10.677334"
     },
     {
@@ -792,12 +792,12 @@
       "vehicle_type": "รถจักรยานยนต์",
       "fuel_type": "ดีเซล",
       "specifications": "รถจักรยานยนต์",
-      "base_location": "เขื่อนท่าทุ่งนา",
+      "base_location": "เขื่อนท่าทุ่งนา (ศกท-หก.)",
       "status": "ใช้งาน",
       "registration_date": "2003-01-08",
       "tax_due_date": null,
       "tax_amount": null,
-      "current_mileage": 71550,
+      "current_mileage": 24517,
       "created_at": "2026-09-16T09:30:10.677345"
     },
     {
@@ -817,7 +817,7 @@
       "registration_date": "2013-12-02",
       "tax_due_date": "2026-02-12",
       "tax_amount": 1900,
-      "current_mileage": 73000,
+      "current_mileage": 0,
       "created_at": "2026-09-16T09:30:10.677360"
     },
     {
@@ -832,12 +832,12 @@
       "vehicle_type": "รถตู้โดยสารที่มีที่นั่งไม่เกิน 12 ที่นั่ง",
       "fuel_type": "ดีเซล",
       "specifications": "TOYOTA  รถตู้โดยสารที่มีที่นั่งไม่เกิน 12 ที่นั่ง",
-      "base_location": "เขื่อนท่าทุ่งนา",
+      "base_location": "รฟ.สิรินธร",
       "status": "ใช้งาน",
       "registration_date": "2013-12-02",
       "tax_due_date": "2026-02-12",
       "tax_amount": 1900,
-      "current_mileage": 74450,
+      "current_mileage": 265463,
       "created_at": "2026-09-16T09:30:10.677375"
     },
     {
@@ -857,7 +857,7 @@
       "registration_date": "2008-11-11",
       "tax_due_date": "2026-11-11",
       "tax_amount": null,
-      "current_mileage": 75900,
+      "current_mileage": 0,
       "created_at": "2026-09-16T09:30:10.677392"
     },
     {
@@ -872,12 +872,12 @@
       "vehicle_type": "รถยนต์นั่ง 2 ตอน ท้ายบรรทุก",
       "fuel_type": "ดีเซล",
       "specifications": "รถยนต์นั่ง 2 ตอนท้ายบรรทุก",
-      "base_location": "เขื่อนท่าทุ่งนา",
+      "base_location": "โครงการเพรชบุรี",
       "status": "ใช้งาน",
       "registration_date": "2008-11-11",
       "tax_due_date": "2026-11-11",
       "tax_amount": 4876,
-      "current_mileage": 77350,
+      "current_mileage": 287330,
       "created_at": "2026-09-16T09:30:10.677407"
     },
     {
@@ -892,12 +892,12 @@
       "vehicle_type": "รถยนต์นั่ง 2 ตอน ท้ายบรรทุก",
       "fuel_type": "ดีเซล",
       "specifications": "รถยนต์นั่ง 2 ตอนท้ายบรรทุก",
-      "base_location": "เขื่อนท่าทุ่งนา",
+      "base_location": "เขื่อนท่าทุ่งนา (ศกท-หก.)",
       "status": "ใช้งาน",
       "registration_date": "2008-11-11",
       "tax_due_date": "2026-11-11",
       "tax_amount": 4876,
-      "current_mileage": 78800,
+      "current_mileage": 373680,
       "created_at": "2026-09-16T09:30:10.677420"
     },
     {
@@ -912,12 +912,12 @@
       "vehicle_type": "รถยนต์นั่ง 2 ตอน 2 แถว",
       "fuel_type": "ดีเซล",
       "specifications": "",
-      "base_location": "เขื่อนท่าทุ่งนา",
+      "base_location": "รฟ.แม่เมาะ",
       "status": "รอซ่อม",
       "registration_date": "2012-10-10",
       "tax_due_date": "2026-10-10",
       "tax_amount": 1600,
-      "current_mileage": 80250,
+      "current_mileage": 254291,
       "created_at": "2026-09-16T09:30:10.677434"
     },
     {
@@ -937,7 +937,7 @@
       "registration_date": "2006-10-11",
       "tax_due_date": "2026-11-10",
       "tax_amount": 6896,
-      "current_mileage": 81700,
+      "current_mileage": 0,
       "created_at": "2026-09-16T09:30:10.677448"
     },
     {
@@ -952,12 +952,12 @@
       "vehicle_type": "รถตู้โดยสารที่มีที่นั่งไม่เกิน 12 ที่นั่ง",
       "fuel_type": "ดีเซล",
       "specifications": "รถตู้โดยสารที่มีที่นั่งไม่เกิน 12 ที่นั่ง",
-      "base_location": "เขื่อนท่าทุ่งนา",
+      "base_location": "รฟ.แม่เมาะ",
       "status": "รอซ่อม",
       "registration_date": "2014-08-27",
       "tax_due_date": "2027-08-27",
       "tax_amount": null,
-      "current_mileage": 83150,
+      "current_mileage": 277597,
       "created_at": "2026-09-16T09:30:10.677461"
     },
     {
@@ -977,7 +977,7 @@
       "registration_date": "2014-09-05",
       "tax_due_date": "2026-05-09",
       "tax_amount": 1600,
-      "current_mileage": 84690,
+      "current_mileage": 0,
       "created_at": "2026-09-16T09:30:10.677474"
     },
     {
@@ -997,7 +997,7 @@
       "registration_date": "2014-09-05",
       "tax_due_date": "2026-05-09",
       "tax_amount": 1600,
-      "current_mileage": 86050,
+      "current_mileage": 0,
       "created_at": "2026-09-16T09:30:10.677491"
     },
     {
@@ -1017,7 +1017,7 @@
       "registration_date": "2009-10-01",
       "tax_due_date": "2026-01-10",
       "tax_amount": 1300,
-      "current_mileage": 87500,
+      "current_mileage": 0,
       "created_at": "2026-09-16T09:30:10.677503"
     }
   ],

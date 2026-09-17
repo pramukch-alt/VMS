@@ -73,33 +73,37 @@ for r in range(2, sheet.max_row + 1):
     else:
         fuel_type = raw_fuel
     
-    # Col 11: Base Location
-    raw_location = str(sheet.cell(r, 11).value or '').strip()
-    if 'สนญ' in raw_location or 'บางกรวย' in raw_location:
-        base_location = 'สนก.บางกรวย'
-    else:
-        base_location = raw_location if raw_location else 'สนก.บางกรวย'
+    # Col 11 (K): เลขไมล์ล่าสุด
+    raw_mileage = sheet.cell(r, 11).value
+    try:
+        mileage = float(raw_mileage) if raw_mileage is not None and str(raw_mileage).strip() != '' else 0.0
+    except (ValueError, TypeError):
+        mileage = 0.0
+
+    # Col 12 (L): Base Location
+    raw_location = str(sheet.cell(r, 12).value or '').strip()
+    base_location = raw_location if raw_location else 'สนก.บางกรวย'
     
-    # Col 12: สังกัด (หน่วยงานย่อย/เจ้าของรถ เช่น กยค-พ., กคร-พ., กฟค-พ.)
-    department = str(sheet.cell(r, 12).value or '').strip()
+    # Col 13 (M): สังกัด (หน่วยงานย่อย/เจ้าของรถ เช่น กยค-พ., กคร-พ., กฟค-พ.)
+    department = str(sheet.cell(r, 13).value or '').strip()
     if not department or department.upper() == 'NA':
         department = overall_dept
 
-    status = statuses[len(inserted_vehicles) % len(statuses)]
+    # Col 14 (N): สถานะ
+    excel_status = str(sheet.cell(r, 14).value or '').strip()
+    status = excel_status if excel_status in ['จอดรองาน', 'ใช้งาน', 'รอซ่อม', 'ซ่อม', 'รอยุบสภาพ', 'ยุบสภาพ'] else statuses[len(inserted_vehicles) % len(statuses)]
     
-    # Col 14: วันจดทะเบียน
-    reg_date = parse_date(sheet.cell(r, 14).value)
+    # Col 15 (O): วันจดทะเบียน
+    reg_date = parse_date(sheet.cell(r, 15).value)
     
-    # Col 15: รอบชำระภาษีประจำปี (ระงับการใช้งานชั่วคราว)
+    # Col 16 (P): รอบชำระภาษีประจำปี
     
-    # Col 16: วันครบกำหนดชำระภาษี
-    tax_due_date = parse_date(sheet.cell(r, 16).value)
+    # Col 17 (Q): วันครบกำหนดชำระภาษี
+    tax_due_date = parse_date(sheet.cell(r, 17).value)
     
-    # Col 17: ยอดชำระภาษี 2569
-    tax_amt_val = sheet.cell(r, 17).value
+    # Col 18 (R): ยอดชำระภาษี 2569
+    tax_amt_val = sheet.cell(r, 18).value
     tax_amount = float(tax_amt_val) if tax_amt_val is not None and str(tax_amt_val).strip() != '' and str(tax_amt_val).upper() != 'NONE' else None
-    
-    mileage = 15000 + (len(inserted_vehicles) * 1450) % 75000
 
     v_id = len(inserted_vehicles) + 1
     inserted_vehicles.append({

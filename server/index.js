@@ -158,7 +158,7 @@ app.get('/api/vehicles/:id', (req, res) => {
 });
 
 // Update Full Vehicle Details (Including Current Mileage, Department, Fuel Type)
-app.put('/api/vehicles/:id', (req, res) => {
+app.put('/api/vehicles/:id', async (req, res) => {
   try {
     const db = readDb();
     const vId = Number(req.params.id);
@@ -191,6 +191,27 @@ app.put('/api/vehicles/:id', (req, res) => {
 
     writeDb(db);
 
+    // Sync to Neon if connected
+    if (sql) {
+      try {
+        await sql.query(`
+          UPDATE vehicles
+          SET department = $1, internal_id = $2, license_plate = $3, brand = $4, model = $5,
+              category = $6, vehicle_type = $7, fuel_type = $8, specifications = $9,
+              base_location = $10, status = $11, registration_date = $12, tax_due_date = $13,
+              tax_amount = $14, current_mileage = $15
+          WHERE id = $16;
+        `, [
+          vehicle.department, vehicle.internal_id, vehicle.license_plate, vehicle.brand, vehicle.model,
+          vehicle.category, vehicle.vehicle_type, vehicle.fuel_type, vehicle.specifications,
+          vehicle.base_location, vehicle.status, vehicle.registration_date || null, vehicle.tax_due_date || null,
+          vehicle.tax_amount || null, vehicle.current_mileage || 0, vId
+        ]);
+      } catch (dbErr) {
+        console.error('Neon sync error on vehicle update:', dbErr);
+      }
+    }
+
     res.json({ success: true, message: 'แก้ไขข้อมูลยานพาหนะสำเร็จ', vehicle });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -198,7 +219,7 @@ app.put('/api/vehicles/:id', (req, res) => {
 });
 
 // Update Vehicle Status (Support: จอดรองาน / ใช้งาน / รอซ่อม / ซ่อม / รอยุบสภาพ / ยุบสภาพ)
-app.put('/api/vehicles/:id/status', (req, res) => {
+app.put('/api/vehicles/:id/status', async (req, res) => {
   try {
     const db = readDb();
     const vId = Number(req.params.id);
@@ -211,6 +232,15 @@ app.put('/api/vehicles/:id/status', (req, res) => {
 
     vehicle.status = status;
     writeDb(db);
+
+    // Sync to Neon if connected
+    if (sql) {
+      try {
+        await sql.query('UPDATE vehicles SET status = $1 WHERE id = $2;', [status, vId]);
+      } catch (dbErr) {
+        console.error('Neon sync error on vehicle status update:', dbErr);
+      }
+    }
 
     res.json({ success: true, message: `อัปเดตสถานะรถเป็น "${status}" สำเร็จ` });
   } catch (err) {
