@@ -443,16 +443,17 @@ app.get('/api/maintenance', (req, res) => {
   }
 });
 
-app.post('/api/maintenance', (req, res) => {
+app.post('/api/maintenance', async (req, res) => {
   try {
     const db = readDb();
+    const newId = db.maintenance_records.length > 0 ? Math.max(...db.maintenance_records.map(m => m.id)) + 1 : 1;
     const newRecord = {
-      id: db.maintenance_records.length + 1,
+      id: newId,
       vehicle_id: Number(req.body.vehicle_id),
       record_type: req.body.record_type,
       service_date: req.body.service_date,
       next_due_date: req.body.next_due_date || null,
-      cost: Number(req.body.cost),
+      cost: Number(req.body.cost) || 0,
       remarks: req.body.remarks || '',
       created_at: new Date().toISOString()
     };
@@ -467,7 +468,98 @@ app.post('/api/maintenance', (req, res) => {
 
     writeDb(db);
 
-    res.json({ id: newRecord.id, message: 'บันทึกประวัติซ่อมบำรุงสำเร็จ' });
+    // Sync to Neon if connected
+    if (sql) {
+      try {
+        await sql.query(`
+          INSERT INTO maintenance_records (id, vehicle_id, record_type, service_date, next_due_date, cost, remarks, created_at)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+          ON CONFLICT (id) DO UPDATE SET
+            vehicle_id = EXCLUDED.vehicle_id,
+            record_type = EXCLUDED.record_type,
+            service_date = EXCLUDED.service_date,
+            next_due_date = EXCLUDED.next_due_date,
+            cost = EXCLUDED.cost,
+            remarks = EXCLUDED.remarks;
+        `, [newRecord.id, newRecord.vehicle_id, newRecord.record_type, newRecord.service_date, newRecord.next_due_date || null, newRecord.cost, newRecord.remarks || '', newRecord.created_at]);
+      } catch (dbErr) {
+        console.error('Neon sync error on maintenance insert:', dbErr);
+      }
+    }
+
+    res.json({ id: newRecord.id, message: 'บันทึกประวัติซ่อมบำรุงสำเร็จ', record: newRecord });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Update Maintenance Record
+app.put('/api/maintenance/:id', async (req, res) => {
+  try {
+    const db = readDb();
+    const mId = Number(req.params.id);
+    const index = db.maintenance_records.findIndex(m => m.id === mId);
+    if (index === -1) {
+      return res.status(404).json({ error: 'ไม่พบประวัติการซ่อมบำรุงที่ต้องการแก้ไข' });
+    }
+
+    const existing = db.maintenance_records[index];
+    const updated = {
+      ...existing,
+      vehicle_id: req.body.vehicle_id !== undefined ? Number(req.body.vehicle_id) : existing.vehicle_id,
+      record_type: req.body.record_type !== undefined ? req.body.record_type : existing.record_type,
+      service_date: req.body.service_date !== undefined ? req.body.service_date : existing.service_date,
+      next_due_date: req.body.next_due_date !== undefined ? req.body.next_due_date : existing.next_due_date,
+      cost: req.body.cost !== undefined ? Number(req.body.cost) : existing.cost,
+      remarks: req.body.remarks !== undefined ? req.body.remarks : existing.remarks,
+      updated_at: new Date().toISOString()
+    };
+
+    db.maintenance_records[index] = updated;
+    writeDb(db);
+
+    // Sync to Neon if connected
+    if (sql) {
+      try {
+        await sql.query(`
+          UPDATE maintenance_records
+          SET vehicle_id = $1, record_type = $2, service_date = $3, next_due_date = $4, cost = $5, remarks = $6
+          WHERE id = $7;
+        `, [updated.vehicle_id, updated.record_type, updated.service_date, updated.next_due_date || null, updated.cost, updated.remarks || '', mId]);
+      } catch (dbErr) {
+        console.error('Neon sync error on maintenance update:', dbErr);
+      }
+    }
+
+    res.json({ success: true, message: 'แก้ไขข้อมูลงานซ่อมบำรุงสำเร็จ', record: updated });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Delete Maintenance Record
+app.delete('/api/maintenance/:id', async (req, res) => {
+  try {
+    const db = readDb();
+    const mId = Number(req.params.id);
+    const index = db.maintenance_records.findIndex(m => m.id === mId);
+    if (index === -1) {
+      return res.status(404).json({ error: 'ไม่พบประวัติการซ่อมบำรุงที่ต้องการลบ' });
+    }
+
+    const deleted = db.maintenance_records.splice(index, 1)[0];
+    writeDb(db);
+
+    // Sync to Neon if connected
+    if (sql) {
+      try {
+        await sql.query('DELETE FROM maintenance_records WHERE id = $1;', [mId]);
+      } catch (dbErr) {
+        console.error('Neon sync error on maintenance delete:', dbErr);
+      }
+    }
+
+    res.json({ success: true, message: 'ลบรายการซ่อมบำรุงเรียบร้อยแล้ว', id: mId, deleted });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

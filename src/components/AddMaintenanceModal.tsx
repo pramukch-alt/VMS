@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { X, Wrench, Search, Plus, CheckCircle2 } from 'lucide-react';
-import { Vehicle } from '../types';
-import { fetchVehicles, createMaintenanceRecord } from '../services/api';
+import { X, Wrench, Search, Plus, CheckCircle2, Edit3, Save } from 'lucide-react';
+import { Vehicle, MaintenanceRecord } from '../types';
+import { fetchVehicles, createMaintenanceRecord, updateMaintenanceRecord } from '../services/api';
 
 interface AddMaintenanceModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  recordToEdit?: MaintenanceRecord | null;
 }
 
-export const AddMaintenanceModal: React.FC<AddMaintenanceModalProps> = ({ isOpen, onClose, onSuccess }) => {
+export const AddMaintenanceModal: React.FC<AddMaintenanceModalProps> = ({ 
+  isOpen, 
+  onClose, 
+  onSuccess,
+  recordToEdit = null
+}) => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedVehicleId, setSelectedVehicleId] = useState<number | ''>('');
@@ -26,17 +32,35 @@ export const AddMaintenanceModal: React.FC<AddMaintenanceModalProps> = ({ isOpen
 
   useEffect(() => {
     if (isOpen) {
+      setErrorMsg(null);
       fetchVehicles()
         .then(data => {
           setVehicles(data);
-          if (data.length > 0) {
-            setSelectedVehicleId(data[0].id);
-            setSelectedVehicle(data[0]);
+          if (recordToEdit) {
+            setSelectedVehicleId(recordToEdit.vehicle_id);
+            const found = data.find(v => v.id === recordToEdit.vehicle_id);
+            if (found) setSelectedVehicle(found);
+            setRecordType(recordToEdit.record_type);
+            setServiceDate(recordToEdit.service_date);
+            setNextDueDate(recordToEdit.next_due_date || '');
+            setCost(recordToEdit.cost);
+            setRemarks(recordToEdit.remarks || '');
+          } else {
+            if (data.length > 0) {
+              setSelectedVehicleId(data[0].id);
+              setSelectedVehicle(data[0]);
+            }
+            setRecordType('ตรอ. / ถ่ายน้ำมันเครื่อง');
+            const todayStr = new Date().toISOString().substring(0, 10);
+            setServiceDate(todayStr);
+            setNextDueDate('');
+            setCost(3500);
+            setRemarks('');
           }
         })
         .catch(err => console.error(err));
     }
-  }, [isOpen]);
+  }, [isOpen, recordToEdit]);
 
   const filteredVehicles = vehicles.filter(v => {
     if (!searchTerm) return true;
@@ -64,14 +88,25 @@ export const AddMaintenanceModal: React.FC<AddMaintenanceModalProps> = ({ isOpen
     try {
       setSubmitting(true);
       setErrorMsg(null);
-      await createMaintenanceRecord({
-        vehicle_id: Number(selectedVehicleId),
-        record_type: recordType,
-        service_date: serviceDate,
-        next_due_date: nextDueDate || null,
-        cost: Number(cost),
-        remarks: remarks
-      });
+      if (recordToEdit) {
+        await updateMaintenanceRecord(recordToEdit.id, {
+          vehicle_id: Number(selectedVehicleId),
+          record_type: recordType,
+          service_date: serviceDate,
+          next_due_date: nextDueDate || null,
+          cost: Number(cost),
+          remarks: remarks
+        });
+      } else {
+        await createMaintenanceRecord({
+          vehicle_id: Number(selectedVehicleId),
+          record_type: recordType,
+          service_date: serviceDate,
+          next_due_date: nextDueDate || null,
+          cost: Number(cost),
+          remarks: remarks
+        });
+      }
       onSuccess();
       onClose();
     } catch (err: any) {
@@ -90,11 +125,17 @@ export const AddMaintenanceModal: React.FC<AddMaintenanceModalProps> = ({ isOpen
         <div className="bg-brand-secondary text-white p-5 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="p-2 bg-brand-primary rounded-lg text-white">
-              <Wrench className="w-5 h-5" />
+              {recordToEdit ? <Edit3 className="w-5 h-5" /> : <Wrench className="w-5 h-5" />}
             </div>
             <div>
-              <h3 className="text-lg font-bold">เพิ่มข้อมูลงานซ่อมบำรุง</h3>
-              <p className="text-xs text-slate-300">บันทึกประวัติการบำรุงรักษา ถ่ายน้ำมันเครื่อง และตรวจสภาพ ตรอ.</p>
+              <h3 className="text-lg font-bold">
+                {recordToEdit ? 'แก้ไขข้อมูลงานซ่อมบำรุง' : 'เพิ่มข้อมูลงานซ่อมบำรุง'}
+              </h3>
+              <p className="text-xs text-slate-300">
+                {recordToEdit 
+                  ? 'ปรับปรุงรายละเอียดการซ่อมบำรุง ยานพาหนะ และค่าใช้จ่าย' 
+                  : 'บันทึกประวัติการบำรุงรักษา ถ่ายน้ำมันเครื่อง และตรวจสภาพ ตรอ.'}
+              </p>
             </div>
           </div>
           <button onClick={onClose} className="p-1.5 text-slate-300 hover:text-white rounded-lg">
@@ -255,8 +296,8 @@ export const AddMaintenanceModal: React.FC<AddMaintenanceModalProps> = ({ isOpen
               disabled={submitting}
               className="bg-brand-primary hover:bg-brand-primaryHover text-white px-5 py-2 rounded-lg text-sm font-semibold flex items-center space-x-2 transition-all shadow-md"
             >
-              <Plus className="w-4 h-4" />
-              <span>{submitting ? 'กำลังบันทึก...' : 'บันทึกข้อมูลซ่อมบำรุง'}</span>
+              {recordToEdit ? <Save className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+              <span>{submitting ? 'กำลังบันทึก...' : (recordToEdit ? 'บันทึกการแก้ไข' : 'บันทึกข้อมูลซ่อมบำรุง')}</span>
             </button>
           </div>
         </form>

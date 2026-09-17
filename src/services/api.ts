@@ -135,15 +135,39 @@ export async function fetchMaintenanceRecords(): Promise<MaintenanceRecord[]> {
   return res.json();
 }
 
-export async function createMaintenanceRecord(data: Partial<MaintenanceRecord>): Promise<{ id: number; message: string }> {
+export async function createMaintenanceRecord(data: Partial<MaintenanceRecord>): Promise<{ id: number; message: string; record: MaintenanceRecord }> {
   const res = await fetch(`${API_BASE}/maintenance`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
   });
   if (!res.ok) {
-    const err = await res.json();
+    const err = await res.json().catch(() => ({ error: 'Failed to create maintenance record' }));
     throw new Error(err.error || 'Failed to create maintenance record');
+  }
+  return res.json();
+}
+
+export async function updateMaintenanceRecord(id: number, data: Partial<MaintenanceRecord>): Promise<{ success: boolean; message: string; record: MaintenanceRecord }> {
+  const res = await fetch(`${API_BASE}/maintenance/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Failed to update maintenance record' }));
+    throw new Error(err.error || 'Failed to update maintenance record');
+  }
+  return res.json();
+}
+
+export async function deleteMaintenanceRecord(id: number): Promise<{ success: boolean; message: string }> {
+  const res = await fetch(`${API_BASE}/maintenance/${id}`, {
+    method: 'DELETE'
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Failed to delete maintenance record' }));
+    throw new Error(err.error || 'Failed to delete maintenance record');
   }
   return res.json();
 }
