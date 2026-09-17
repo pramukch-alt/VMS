@@ -6,6 +6,10 @@ import os from 'os';
 import { execFile } from 'child_process';
 import { fileURLToPath } from 'url';
 import { createClient } from '@supabase/supabase-js';
+import { neon } from '@neondatabase/serverless';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,7 +25,10 @@ function writeDb(data) {
   fs.writeFileSync(dbPath, JSON.stringify(data, null, 2), 'utf-8');
 }
 
-// Supabase client initialization (if credentials are provided in env)
+// Database connections: Neon Postgres (primary) or Supabase (alternative)
+const dbUrl = process.env.DATABASE_URL || process.env.DATABASE_URL_POOLED;
+export const sql = dbUrl ? neon(dbUrl) : null;
+
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
 export const supabase = (supabaseUrl && supabaseKey) 
@@ -36,13 +43,25 @@ const PORT = process.env.PORT || 5000;
 const TODAY = '2026-09-15';
 
 // --- Health Check API (for Render and uptime monitors) ---
-app.get('/api/health', (req, res) => {
+app.get('/api/health', async (req, res) => {
+  let dbStatus = 'local_json';
+  if (sql) {
+    try {
+      await sql.query('SELECT 1');
+      dbStatus = 'neon_postgres';
+    } catch (e) {
+      dbStatus = 'neon_error: ' + e.message;
+    }
+  } else if (supabase) {
+    dbStatus = 'supabase';
+  }
+
   res.json({
     status: 'ok',
     service: 'EGAT VMS API',
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
-    database: supabase ? 'supabase' : 'local_json',
+    database: dbStatus,
     environment: process.env.NODE_ENV || 'development'
   });
 });

@@ -8,7 +8,7 @@
 ## 🏗️ โครงสร้างสถาปัตยกรรมระบบ (Tech Stack)
 
 - **Source Code & Repository:** [GitHub](https://github.com)
-- **Database:** [Supabase](https://supabase.com) (PostgreSQL พร้อม Row Level Security & JSONB)
+- **Database:** [Neon](https://neon.tech) (Serverless PostgreSQL พร้อม JSONB และ Connection Pooling)
 - **Backend API:** [Render](https://render.com) (Node.js Express + Python 3 openpyxl สำหรับสร้างไฟล์ Excel VMC Form 01)
 - **Frontend SPA:** [Vercel](https://vercel.com) (React 19 + TypeScript + Vite + Tailwind CSS + Lucide Icons)
 
@@ -28,7 +28,7 @@ git init
 git add .
 
 # 3. บันทึก Commit แรก
-git commit -m "Initial commit: EGAT VMS with Supabase, Render and Vercel deployment setup"
+git commit -m "Initial commit: EGAT VMS with Neon Postgres, Render and Vercel deployment setup"
 
 # 4. ตั้งชื่อ Branch หลักเป็น main
 git branch -M main
@@ -42,27 +42,15 @@ git push -u origin main
 
 ---
 
-### ขั้นตอนที่ 2: ตั้งค่าฐานข้อมูลบน Supabase
+### ขั้นตอนที่ 2: ฐานข้อมูล Neon.tech (ตั้งค่าและโอนย้ายสำเร็จแล้ว ✅)
 
-1. ไปที่ [Supabase](https://supabase.com) แล้วลงชื่อเข้าใช้
-2. คลิก **"New Project"**
-   - ตั้งชื่อโปรเจกต์ เช่น `vms-database`
-   - กำหนดรหัสผ่านฐานข้อมูล (Database Password)
-   - เลือก Region: **Singapore (ap-southeast-1)** เพื่อความเร็วสูงสุดในไทย
-3. เมื่อสร้างโปรเจกต์เสร็จ ให้ไปที่เมนู **SQL Editor** ทางซ้ายมือ:
-   - คลิก **"New query"**
-   - คัดลอกโค้ดทั้งหมดจากไฟล์ [`supabase/schema.sql`](supabase/schema.sql) ในโปรเจกต์นี้ มาวาง
-   - คลิกปุ่ม **"Run"** เพื่อสร้างตารางทั้งหมด 6 ตาราง (`vehicles`, `work_orders`, `fuel_logs`, `maintenance_records`, `email_logs`, `pn1_reports`)
-4. คัดลอกกุญแจเชื่อมต่อ:
-   - ไปที่ **Project Settings** -> **API**
-   - คัดลอก **Project URL** (เช่น `https://xyzcompany.supabase.co`)
-   - คัดลอก **service_role secret key** (คลิก reveal ก่อนคัดลอก)
-5. **โอนย้ายข้อมูลจากระบบเดิมขึ้น Supabase (Run ครั้งเดียว):**
-   - ในเครื่องของท่าน รันคำสั่ง:
-   ```bash
-   node scripts/migrate_to_supabase.js --url "https://your-project.supabase.co" --key "your-service-role-key"
-   ```
-   - ข้อมูลรถทั้งหมด 51 คัน, ประวัติใบงาน, น้ำมัน, และรายงาน พน.1 จะถูกบันทึกขึ้น Supabase ทันที
+ระบบได้ทำการเชื่อมต่อไปยัง Neon PostgreSQL, สร้างตารางครบทั้ง 6 ตาราง และโอนย้ายข้อมูลรถทั้ง 51 คัน พร้อมประวัติใบงาน น้ำมัน ซ่อมบำรุง และรายงาน พน.1 ขึ้นสู่ Neon เรียบร้อยแล้ว 100%!
+
+หากต้องการตรวจสอบหรือรันซ้ำ สามารถรันคำสั่ง:
+```bash
+node scripts/setup_neon_db.js
+```
+* หมายเหตุ: Connection String ถูกบันทึกไว้ในไฟล์ `.env` เรียบร้อยแล้ว และถูกตั้งค่าให้อยู่ใน `.gitignore` เพื่อความปลอดภัย ไม่หลุดขึ้น GitHub แน่นอน
 
 ---
 
@@ -79,8 +67,7 @@ git push -u origin main
 5. เพิ่ม **Environment Variables** (ในหัวข้อ Environment):
    - `PORT` = `5000`
    - `NODE_ENV` = `production`
-   - `SUPABASE_URL` = `https://your-project.supabase.co` (จากขั้นตอนที่ 2)
-   - `SUPABASE_SERVICE_ROLE_KEY` = `your-service-role-key` (จากขั้นตอนที่ 2)
+   - `DATABASE_URL` = *(วาง Neon Connection String ของท่าน)*
 6. คลิก **"Create Web Service"**
    - รอระบบ Build และรันเสร็จสิ้น
    - ท่านจะได้ URL ของ Backend เช่น: `https://vms-backend-xxxx.onrender.com`
