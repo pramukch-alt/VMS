@@ -39,9 +39,22 @@ export const CompleteWorkOrderModal: React.FC<CompleteWorkOrderModalProps> = ({ 
   const currentEndM = typeof endMileage === 'number' ? endMileage : startM;
   const calculatedDistance = Math.max(0, currentEndM - startM);
 
-  const isEarlyReturn = workOrder.planned_end_datetime && endDatetime
-    ? new Date(endDatetime).getTime() < new Date(workOrder.planned_end_datetime.replace(' ', 'T')).getTime()
-    : false;
+  const plannedTime = workOrder.planned_end_datetime ? new Date(workOrder.planned_end_datetime.replace(' ', 'T')).getTime() : 0;
+  const returnTime = endDatetime ? new Date(endDatetime).getTime() : 0;
+  const diffMinutes = plannedTime && returnTime ? Math.round((returnTime - plannedTime) / (60 * 1000)) : 0;
+
+  const isEarlyReturn = diffMinutes < -15;
+  const isLateReturn = diffMinutes > 15;
+  const isOnTime = plannedTime > 0 && !isEarlyReturn && !isLateReturn;
+
+  const formatDuration = (mins: number) => {
+    const absM = Math.abs(mins);
+    const h = Math.floor(absM / 60);
+    const m = absM % 60;
+    if (h > 0 && m > 0) return `${h} ชม. ${m} นาที`;
+    if (h > 0) return `${h} ชม.`;
+    return `${m} นาที`;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,8 +69,8 @@ export const CompleteWorkOrderModal: React.FC<CompleteWorkOrderModalProps> = ({ 
     }
 
     const startTime = new Date(workOrder.start_datetime.replace(' ', 'T')).getTime();
-    const returnTime = new Date(endDatetime).getTime();
-    if (returnTime < startTime) {
+    const currentReturnTime = new Date(endDatetime).getTime();
+    if (currentReturnTime < startTime) {
       setErrorMsg('วันและเวลาที่คืนรถจริง ต้องไม่เกิดขึ้นก่อนวันและเวลาเริ่มใช้รถ');
       return;
     }
@@ -102,20 +115,23 @@ export const CompleteWorkOrderModal: React.FC<CompleteWorkOrderModalProps> = ({ 
             </div>
           )}
 
-          {/* Work Order Overview */}
-          <div className="bg-slate-50 border border-slate-200 p-3.5 rounded-lg text-xs space-y-1.5">
-            <div className="flex items-center justify-between">
-              <p className="font-bold text-slate-800">ผู้เบิกใช้งาน: {workOrder.requester_name} ({workOrder.department})</p>
-              {workOrder.planned_end_datetime && (
-                <span className="text-[11px] bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-medium">
-                  กำหนดคืนเดิม: {workOrder.planned_end_datetime}
-                </span>
-              )}
+          {/* Vehicle Info */}
+          <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2 text-xs">
+            <div className="flex justify-between items-start">
+              <div>
+                <span className="font-bold text-brand-secondary text-sm">{workOrder.internal_id}</span>
+                <span className="text-slate-600 ml-2 font-medium">({workOrder.license_plate})</span>
+                <p className="text-slate-500 mt-0.5">{workOrder.brand} {workOrder.model}</p>
+              </div>
+              <span className="bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded text-[11px]">
+                {workOrder.department}
+              </span>
             </div>
-            <p className="text-slate-600">วัตถุประสงค์: {workOrder.purpose}</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-slate-500 pt-1 border-t border-slate-200/60">
-              <p>วันเวลาที่นำรถออก: <span className="font-medium text-slate-700">{workOrder.start_datetime}</span></p>
-              <p>วันสิ้นสุดตามจอง: <span className="font-medium text-slate-700">{workOrder.planned_end_datetime || 'ไม่ได้ระบุ'}</span></p>
+            <div className="pt-2 border-t border-slate-200 text-slate-600">
+              <p><strong>ผู้ขอเบิก:</strong> {workOrder.requester_name}</p>
+              <p className="mt-0.5"><strong>วัตถุประสงค์:</strong> {workOrder.purpose}</p>
+              <p className="mt-0.5"><strong>เวลาเริ่มใช้งาน:</strong> {workOrder.start_datetime}</p>
+              <p className="mt-0.5"><strong>กำหนดส่งคืน:</strong> {workOrder.planned_end_datetime || '-'}</p>
             </div>
           </div>
 
@@ -126,9 +142,21 @@ export const CompleteWorkOrderModal: React.FC<CompleteWorkOrderModalProps> = ({ 
                 วันและเวลาที่ส่งคืนรถจริง (Actual Return Date/Time) <span className="text-rose-500">*</span>
               </label>
               {isEarlyReturn && (
-                <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 border border-blue-200">
-                  <Clock className="w-3 h-3 text-blue-600" />
-                  คืนรถก่อนกำหนด
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+                  <Clock className="w-3 h-3 text-emerald-600" />
+                  คืนก่อนกำหนด ({formatDuration(diffMinutes)})
+                </span>
+              )}
+              {isLateReturn && (
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300">
+                  <Clock className="w-3 h-3 text-amber-600" />
+                  คืนช้ากว่ากำหนด ({formatDuration(diffMinutes)})
+                </span>
+              )}
+              {isOnTime && (
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-300">
+                  <CheckCircle2 className="w-3 h-3 text-slate-500" />
+                  คืนตรงตามกำหนด
                 </span>
               )}
             </div>
@@ -140,7 +168,7 @@ export const CompleteWorkOrderModal: React.FC<CompleteWorkOrderModalProps> = ({ 
               required
             />
             <p className="text-[11px] text-slate-500">
-              * สามารถระบุวันเวลาคืนรถจริงได้เอง (เช่น คืนก่อนกำหนด) เพื่อคืนสถานะรถกลับเป็น <strong>"จอดรองาน"</strong> ทันที
+              * ระบบคำนวณและบันทึกประวัติการใช้งานเท่านั้น (ไม่มีผลต่อการระงับสิทธิ์การเปิดงานรอบถัดไป) และจะปรับสถานะรถกลับเป็น <strong>"จอดรองาน"</strong> ทันที
             </p>
           </div>
 

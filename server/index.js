@@ -305,7 +305,7 @@ app.get('/api/work-orders', (req, res) => {
 });
 
 // Create Self-Service Work Order (Booking & Instant Dispatch)
-app.post('/api/work-orders', (req, res) => {
+app.post('/api/work-orders', async (req, res) => {
   try {
     const db = readDb();
     const { vehicle_id, requester_name, department, purpose, start_mileage, start_datetime, planned_end_datetime } = req.body;
@@ -319,9 +319,10 @@ app.post('/api/work-orders', (req, res) => {
     }
 
     const nowStr = new Date().toISOString().replace('T', ' ').substring(0, 19);
+    const newId = db.work_orders.length > 0 ? Math.max(...db.work_orders.map(w => w.id)) + 1 : 1;
 
     const newWo = {
-      id: db.work_orders.length + 1,
+      id: newId,
       vehicle_id: Number(vehicle_id),
       requester_name,
       department,
@@ -333,6 +334,8 @@ app.post('/api/work-orders', (req, res) => {
       end_mileage: null,
       total_distance: null,
       status: 'IN_PROGRESS',
+      return_timing: null,
+      return_timing_note: null,
       created_at: nowStr
     };
 
@@ -342,14 +345,44 @@ app.post('/api/work-orders', (req, res) => {
 
     writeDb(db);
 
+    // Sync to Neon PostgreSQL
+    if (sql) {
+      try {
+        await sql.query(`
+          INSERT INTO work_orders (id, vehicle_id, requester_name, department, purpose, start_datetime, planned_end_datetime, start_mileage, status, created_at)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+          ON CONFLICT (id) DO UPDATE SET
+            vehicle_id = EXCLUDED.vehicle_id,
+            requester_name = EXCLUDED.requester_name,
+            department = EXCLUDED.department,
+            purpose = EXCLUDED.purpose,
+            start_datetime = EXCLUDED.start_datetime,
+            planned_end_datetime = EXCLUDED.planned_end_datetime,
+            start_mileage = EXCLUDED.start_mileage,
+            status = EXCLUDED.status;
+        `, [
+          newWo.id, newWo.vehicle_id, newWo.requester_name, newWo.department, newWo.purpose,
+          newWo.start_datetime, newWo.planned_end_datetime, newWo.start_mileage, newWo.status, newWo.created_at
+        ]);
+
+        await sql.query(`
+          UPDATE vehicles
+          SET status = 'ใช้งาน', current_mileage = $1
+          WHERE id = $2;
+        `, [vehicle.current_mileage, vehicle.id]);
+      } catch (dbErr) {
+        console.error('Neon sync error on work order creation:', dbErr);
+      }
+    }
+
     res.json({ id: newWo.id, message: 'บันทึกการจองและเปิดใบงานนำรถออกใช้งานสำเร็จ' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// Complete Work Order (Return Vehicle - Support Early/Custom Return Date)
-app.post('/api/work-orders/:id/complete', (req, res) => {
+// Complete Work Order (Return Vehicle - Support Early/Late Return Log)
+app.post('/api/work-orders/:id/complete', async (req, res) => {
   try {
     const db = readDb();
     const woId = Number(req.params.id);
@@ -370,10 +403,36 @@ app.post('/api/work-orders/:id/complete', (req, res) => {
     const nowStr = new Date().toISOString().replace('T', ' ').substring(0, 19);
     const actualEndDatetime = req.body.end_datetime ? String(req.body.end_datetime).replace('T', ' ') : nowStr;
 
+    // Calculate Return Timing (Log for history only, no penalty or blocking)
+    let returnTiming = 'ON_TIME';
+    let returnTimingNote = 'คืนตรงตามกำหนด';
+
+    if (wo.planned_end_datetime) {
+      const plannedTime = new Date(wo.planned_end_datetime.replace(' ', 'T')).getTime();
+      const actualTime = new Date(actualEndDatetime.replace(' ', 'T')).getTime();
+      const diffMinutes = Math.round((actualTime - plannedTime) / (60 * 1000));
+
+      if (diffMinutes < -15) {
+        returnTiming = 'EARLY';
+        const totalMins = Math.abs(diffMinutes);
+        const hours = Math.floor(totalMins / 60);
+        const mins = totalMins % 60;
+        returnTimingNote = `คืนก่อนกำหนด ${hours > 0 ? `${hours} ชม. ` : ''}${mins > 0 ? `${mins} นาที` : ''}`.trim();
+      } else if (diffMinutes > 15) {
+        returnTiming = 'LATE';
+        const totalMins = diffMinutes;
+        const hours = Math.floor(totalMins / 60);
+        const mins = totalMins % 60;
+        returnTimingNote = `คืนช้ากว่ากำหนด ${hours > 0 ? `${hours} ชม. ` : ''}${mins > 0 ? `${mins} นาที` : ''}`.trim();
+      }
+    }
+
     wo.end_datetime = actualEndDatetime;
     wo.end_mileage = endM;
     wo.total_distance = totalDist;
     wo.status = 'COMPLETED';
+    wo.return_timing = returnTiming;
+    wo.return_timing_note = returnTimingNote;
 
     const vehicle = db.vehicles.find(v => v.id === wo.vehicle_id);
     if (vehicle) {
@@ -383,7 +442,32 @@ app.post('/api/work-orders/:id/complete', (req, res) => {
 
     writeDb(db);
 
-    res.json({ success: true, message: 'ส่งคืนรถและปิดใบงานเรียบร้อยแล้ว สถานะรถเปลี่ยนกลับเป็น "จอดรองาน"', workOrder: wo });
+    // Sync to Neon PostgreSQL
+    if (sql) {
+      try {
+        await sql.query(`
+          UPDATE work_orders
+          SET end_datetime = $1, end_mileage = $2, total_distance = $3, status = 'COMPLETED', return_timing = $4, return_timing_note = $5
+          WHERE id = $6;
+        `, [actualEndDatetime, endM, totalDist, returnTiming, returnTimingNote, woId]);
+
+        if (vehicle) {
+          await sql.query(`
+            UPDATE vehicles
+            SET status = 'จอดรองาน', current_mileage = $1
+            WHERE id = $2;
+          `, [endM, vehicle.id]);
+        }
+      } catch (dbErr) {
+        console.error('Neon sync error on work order completion:', dbErr);
+      }
+    }
+
+    res.json({
+      success: true,
+      message: 'ส่งคืนรถและปิดใบงานเรียบร้อยแล้ว สถานะรถเปลี่ยนกลับเป็น "จอดรองาน"',
+      workOrder: wo
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -697,6 +781,104 @@ function evaluatePn1ReportParameters(report, daysInMonth) {
   };
 }
 
+// Helper: Sync PN1 fuel logs to master fuel_logs table & overwrite vehicle current_mileage
+async function syncPn1DataToFuelLogsAndVehicles(db, report) {
+  if (!report || !report.vehicle_id) return;
+  if (!db.fuel_logs) db.fuel_logs = [];
+
+  const vehicle = db.vehicles.find(v => v.id === report.vehicle_id);
+  const dailyLogs = report.daily_logs || [];
+
+  // 1. Sync Fuel Logs from PN1
+  const fuelLogsToAddOrUpdate = [];
+  dailyLogs.forEach(log => {
+    const liters = Number(log.fuel_liters) || 0;
+    if (log.is_refueled || liters > 0) {
+      const receiptNo = `PN1-${report.month}-${log.date}`;
+      const totalAmount = Number(log.fuel_total_cost) || 0;
+      const odo = Number(log.end_mileage) || Number(log.start_mileage) || (vehicle ? vehicle.current_mileage : 0);
+      const refuelDate = `${log.date} 12:00:00`;
+
+      let existing = db.fuel_logs.find(f => f.receipt_no === receiptNo);
+      if (existing) {
+        existing.liters = liters;
+        existing.total_amount = totalAmount;
+        existing.odometer = odo;
+        existing.vehicle_id = report.vehicle_id;
+        fuelLogsToAddOrUpdate.push(existing);
+      } else {
+        const newFuelId = db.fuel_logs.length > 0 ? Math.max(...db.fuel_logs.map(f => f.id)) + 1 : 1;
+        const newFuelEntry = {
+          id: newFuelId,
+          vehicle_id: report.vehicle_id,
+          work_order_id: null,
+          refuel_date: refuelDate,
+          liters,
+          total_amount: totalAmount,
+          odometer: odo,
+          receipt_no: receiptNo,
+          created_at: new Date().toISOString()
+        };
+        db.fuel_logs.push(newFuelEntry);
+        fuelLogsToAddOrUpdate.push(newFuelEntry);
+      }
+    }
+  });
+
+  // 2. Overwrite Vehicle Master Data Mileage with latest final end_mileage from PN1
+  let latestEndMileage = 0;
+  if (dailyLogs.length > 0) {
+    const sortedLogs = [...dailyLogs].sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+    for (let i = sortedLogs.length - 1; i >= 0; i--) {
+      const m = Number(sortedLogs[i].end_mileage) || 0;
+      if (m > 0) {
+        latestEndMileage = m;
+        break;
+      }
+    }
+    if (latestEndMileage === 0) {
+      latestEndMileage = Math.max(...sortedLogs.map(l => Number(l.end_mileage) || 0));
+    }
+  }
+
+  if (vehicle && latestEndMileage > 0) {
+    vehicle.current_mileage = latestEndMileage;
+  }
+
+  // 3. Sync to Neon PostgreSQL if connected
+  if (sql) {
+    try {
+      if (vehicle && latestEndMileage > 0) {
+        await sql.query(`
+          UPDATE vehicles
+          SET current_mileage = $1
+          WHERE id = $2;
+        `, [latestEndMileage, vehicle.id]);
+      }
+
+      for (const fl of fuelLogsToAddOrUpdate) {
+        await sql.query(`
+          INSERT INTO fuel_logs (id, vehicle_id, work_order_id, refuel_date, liters, total_amount, odometer, receipt_no, created_at)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+          ON CONFLICT (id) DO UPDATE SET
+            vehicle_id = EXCLUDED.vehicle_id,
+            refuel_date = EXCLUDED.refuel_date,
+            liters = EXCLUDED.liters,
+            total_amount = EXCLUDED.total_amount,
+            odometer = EXCLUDED.odometer,
+            receipt_no = EXCLUDED.receipt_no;
+        `, [
+          fl.id, fl.vehicle_id, fl.work_order_id || null,
+          fl.refuel_date ? fl.refuel_date.substring(0, 10) : new Date().toISOString().substring(0, 10),
+          fl.liters, fl.total_amount, fl.odometer, fl.receipt_no, fl.created_at
+        ]);
+      }
+    } catch (neonErr) {
+      console.error('Neon sync error on PN1 sync:', neonErr);
+    }
+  }
+}
+
 app.get('/api/pn1-reports', (req, res) => {
   try {
     const db = readDb();
@@ -751,7 +933,7 @@ app.get('/api/pn1-reports', (req, res) => {
   }
 });
 
-app.put('/api/pn1-reports/:id', (req, res) => {
+app.put('/api/pn1-reports/:id', async (req, res) => {
   try {
     const db = readDb();
     if (!db.pn1_reports) db.pn1_reports = [];
@@ -777,19 +959,14 @@ app.put('/api/pn1-reports/:id', (req, res) => {
 
     db.pn1_reports[index] = updated;
 
-    if (daily_logs.length > 0) {
-      const maxMileage = Math.max(...daily_logs.map(l => Number(l.end_mileage) || 0));
-      const v = db.vehicles.find(x => x.id === current.vehicle_id);
-      if (v && maxMileage > v.current_mileage) {
-        v.current_mileage = maxMileage;
-      }
-    }
+    // Sync fuel logs and overwrite vehicle mileage
+    await syncPn1DataToFuelLogsAndVehicles(db, updated);
 
     writeDb(db);
 
     res.json({
       success: true,
-      message: 'บันทึกการปรับปรุงข้อมูล พน.1 เรียบร้อยแล้ว',
+      message: 'บันทึกการปรับปรุงข้อมูล พน.1 เรียบร้อยแล้ว พร้อมซิงค์ข้อมูลเชื้อเพลิงและเลขไมล์',
       report: updated
     });
   } catch (err) {
@@ -797,7 +974,7 @@ app.put('/api/pn1-reports/:id', (req, res) => {
   }
 });
 
-app.post('/api/pn1-reports', (req, res) => {
+app.post('/api/pn1-reports', async (req, res) => {
   try {
     const db = readDb();
     if (!db.pn1_reports) db.pn1_reports = [];
@@ -813,6 +990,10 @@ app.post('/api/pn1-reports', (req, res) => {
     };
 
     db.pn1_reports.unshift(newReport);
+
+    // Sync fuel logs and overwrite vehicle mileage
+    await syncPn1DataToFuelLogsAndVehicles(db, newReport);
+
     writeDb(db);
     res.json({ id: newReport.id, message: 'บันทึกรายงาน พน.1 เรียบร้อยแล้ว', report: newReport });
   } catch (err) {
@@ -835,7 +1016,7 @@ app.get('/api/pn1-reports/template', (req, res) => {
 });
 
 // Import Data from Excel Template
-app.post('/api/pn1-reports/import-data', (req, res) => {
+app.post('/api/pn1-reports/import-data', async (req, res) => {
   try {
     const db = readDb();
     if (!db.pn1_reports) db.pn1_reports = [];
@@ -961,13 +1142,8 @@ app.post('/api/pn1-reports/import-data', (req, res) => {
       Object.assign(report, evaluated);
       report.updated_at = new Date().toISOString();
 
-      // Update vehicle current_mileage if max end_mileage is higher
-      if (report.daily_logs.length > 0) {
-        const maxEndM = Math.max(...report.daily_logs.map(l => Number(l.end_mileage) || 0));
-        if (maxEndM > vehicle.current_mileage) {
-          vehicle.current_mileage = maxEndM;
-        }
-      }
+      // Sync fuel logs and overwrite vehicle current_mileage with Neon sync
+      await syncPn1DataToFuelLogsAndVehicles(db, report);
 
       updatedReports.push({
         vehicle_id: vehicle.id,

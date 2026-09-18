@@ -40,6 +40,8 @@ export interface WorkOrder {
   end_mileage?: number | null;
   total_distance?: number | null;
   status: 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+  return_timing?: 'EARLY' | 'LATE' | 'ON_TIME' | null;
+  return_timing_note?: string | null;
   created_at?: string;
 }
 
